@@ -106,14 +106,49 @@
             pointerEvents: 'none'
         });
 
+        function getPercentWidth(e) {
+            var width = e.width();
+            var windowWidth = $(window).width();
+            var percent = 100*width/windowWidth;
+
+            return percent;
+        }
+
+        function getPercentHeight(e) {
+            var height = e.height();
+            var windowheight = $(window).height();
+            var percent = 100*height/windowheight;
+
+            return percent;   
+        }
+
         function veryspeak() {
           $('.such.overlay').append(
-            '<span style="position: absolute; left: ' + Math.random()  *100 + '%;top: ' + Math.random()  *100 + '%;font-size: ' + Math.max(20, (Math.random() * 50 + 24)) + 'px; color:' + randomFrom(suchcolors) + ';">'
+            '<span style="position: absolute; left: ' + parseInt(Math.random() * 100, 10)  + '%;top: ' + parseInt(Math.random() * 100, 10) + '%;font-size: ' + parseInt(Math.max(20, (Math.random() * 50 + 24)),10) + 'px; color:' + randomFrom(suchcolors) + ';">'
             + r(dogefix) +
               '</span>');
+
+            var suchtext = $('.such span:last-of-type');
+            var styles = suchtext.attr('style');
+            var re = /left:\s(\d+)%;top:\s(\d+)/;
+            var left = parseInt(re.exec(styles)[1],10);
+            var top = parseInt(re.exec(styles)[2],10);
+
+            var suchwidth = parseInt(getPercentWidth(suchtext), 10);
+            var suchheight = parseInt(getPercentHeight(suchtext), 10);
+
+            if ((suchwidth + left) > 100) {
+                var cropped = suchwidth - (100 - left);
+                suchtext.css('left', left - cropped);
+            }
+
+            if ((suchheight + top) > 100) {
+                var cropped = suchheight - (100 - top);
+                suchtext.css('top', top - cropped);
+            }
+
             var suchnumber = $("span").length;
-            if (suchnumber > 8 )
-            {
+            if (suchnumber > 8 ) {
               $('.such span:nth-child(1)').remove();
             }
         }
